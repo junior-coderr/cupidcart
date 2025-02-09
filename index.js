@@ -5,6 +5,15 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const app = express();
 const dotenv = require("dotenv").config();
+
+// Validate essential environment variables
+if (!process.env.JWT_SECRET) {
+  console.error(
+    "FATAL ERROR: JWT_SECRET is not defined in environment variables."
+  );
+  process.exit(1);
+}
+
 const PORT = process.env.PORT || 4000;
 
 const authRouter = require("./routes/authRoute");
@@ -37,15 +46,17 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-// Add this before any route declarations
+// Update session configuration to use dbUrl
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "your-secret-key",
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: process.env.dbUrl,
+      mongoUrl: process.env.dbUrl, // Changed to match .env variable name
+      collectionName: "sessions",
       ttl: 60 * 10, // Session TTL (10 minutes)
+      autoRemove: "native", // Enable automatic removal of expired sessions
     }),
     cookie: {
       secure: process.env.NODE_ENV === "production",
@@ -53,7 +64,7 @@ app.use(
       maxAge: 10 * 60 * 1000, // 10 minutes
       sameSite: "lax",
     },
-    name: "sessionId", // Change default cookie name for better security
+    name: "sessionId",
   })
 );
 
@@ -115,11 +126,15 @@ app.get("/admin/dashboard", (req, res) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded) {
+      throw new Error("Invalid token");
+    }
     req.user = decoded;
     res.render("pages/admin-dashboard");
   } catch (error) {
-    console.error("Token verification error:", error);
-    res.redirect("/login");
+    console.error("Token verification error:", error.message);
+    res.clearCookie("token"); // Clear invalid token
+    return res.redirect("/login");
   }
 });
 
@@ -132,13 +147,14 @@ app.get("/admin/order-detail", (req, res) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (decoded.role !== "admin") {
-      return res.redirect("/login");
+    if (!decoded || decoded.role !== "admin") {
+      throw new Error("Unauthorized access");
     }
     res.render("pages/admin-order-detail");
   } catch (error) {
-    console.error("Token verification error:", error);
-    res.redirect("/login");
+    console.error("Token verification error:", error.message);
+    res.clearCookie("token"); // Clear invalid token
+    return res.redirect("/login");
   }
 });
 

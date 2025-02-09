@@ -590,15 +590,13 @@ const cancelOrder = async (req, res) => {
   }
 };
 
+const OTPVerification = require("../models/otpVerificationModel");
+
 const sendVerification = async (req, res) => {
   try {
     const { email } = req.body;
 
-    if (!req.session) {
-      throw new Error("Session not initialized");
-    }
-
-    // Check if email already exists
+    // Check if email already exists in users
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email already registered" });
@@ -607,19 +605,11 @@ const sendVerification = async (req, res) => {
     // Generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Store verification data in session
-    req.session.emailVerification = {
+    // Store verification data in MongoDB
+    await OTPVerification.create({
       email,
       otp,
-      expiresAt: Date.now() + 10 * 60 * 1000, // 10 minutes
-    };
-
-    // Save session explicitly
-    await new Promise((resolve, reject) => {
-      req.session.save((err) => {
-        if (err) reject(err);
-        else resolve();
-      });
+      expiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes expiry
     });
 
     // Send verification email
@@ -642,25 +632,28 @@ const verifyOTP = async (req, res) => {
   try {
     const { email, otp } = req.body;
 
-    // Check verification data in session
-    const verification = req.session.emailVerification;
+    // Find the most recent OTP verification record
+    const verification = await OTPVerification.findOne({
+      email,
+      verified: false,
+    }).sort({ createdAt: -1 });
 
-    if (
-      !verification ||
-      verification.email !== email ||
-      verification.otp !== otp
-    ) {
-      return res
-        .status(400)
-        .json({ message: "Invalid or expired verification code" });
+    if (!verification) {
+      return res.status(400).json({ message: "No verification code found" });
+    }
+
+    if (verification.otp !== otp) {
+      return res.status(400).json({ message: "Invalid verification code" });
     }
 
     if (new Date() > new Date(verification.expiresAt)) {
       return res.status(400).json({ message: "Verification code expired" });
     }
 
-    // Clear verification data from session
-    delete req.session.emailVerification;
+    // Mark the verification as used
+    await OTPVerification.findByIdAndUpdate(verification._id, {
+      verified: true,
+    });
 
     res.json({ message: "Email verified successfully" });
   } catch (error) {

@@ -1,11 +1,14 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
+
 const dbConnect = () => {
   try {
-    mongoose.connect(`${process.env.dbUrl}/${process.env.dbName}`);
+    // Use dbUrl instead of MONGODB_URL to match .env
+    const conn = mongoose.connect(process.env.dbUrl);
     console.log("DB Connected Successfully");
   } catch (error) {
-    console.log(" Data base error");
+    console.error("Database connection error:", error);
+    throw error;
   }
 };
 
