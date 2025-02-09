@@ -1,0 +1,74 @@
+<%- include('../partials/header') %>
+
+<div class="container mt-5">
+    <h2>Our Products</h2>
+    <div class="row" id="products-container">
+        <!-- Products will be loaded dynamically -->
+    </div>
+</div>
+
+<script>
+async function fetchProducts() {
+    try {
+        const response = await fetch('/product');
+        if (!response.ok) throw new Error('Failed to fetch products');
+        
+        const products = await response.json();
+        const container = document.getElementById('products-container');
+        
+        container.innerHTML = products.map(product => `
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="${product.images?.[0] || 'https://via.placeholder.com/300x200'}" class="card-img-top" alt="${product.title}">
+                    <div class="card-body">
+                        <h5 class="card-title">${product.title}</h5>
+                        <p class="card-text">${product.description}</p>
+                        <p class="text-primary fw-bold">$${product.price}</p>
+                        <button class="btn btn-primary" onclick="addToCart('${product._id}')">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to load products');
+    }
+}
+
+async function addToCart(productId) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert('Please login to add items to cart');
+        window.location.href = '/login';
+        return;
+    }
+
+    try {
+        const response = await fetch('/user/cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                productId,
+                quantity: 1
+            })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            alert('Product added to cart!');
+        } else {
+            alert(data.message || 'Failed to add to cart');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to add to cart');
+    }
+}
+
+fetchProducts();
+</script>
+
+<%- include('../partials/footer') %>

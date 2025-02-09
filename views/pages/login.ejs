@@ -1,0 +1,513 @@
+<%- include('../partials/header') %>
+
+<div class="auth-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="form-card-container">
+                <div class="auth-card">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-heart auth-icon pulse"></i>
+                        <h2>Welcome Back</h2>
+                        <p class="text-muted">Login to your account</p>
+                    </div>
+                    <form id="loginForm" action="/user/login" method="POST">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+                            <label for="email"><i class="fas fa-envelope"></i> Email address</label>
+                        </div>
+                        <div class="form-floating mb-4">
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                            <label for="password"><i class="fas fa-lock"></i> Password</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <span class="button-content">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </span>
+                            <span class="button-loader d-none">
+                                <i class="fas fa-circle-notch fa-spin"></i> Logging in...
+                            </span>
+                        </button>
+                        <div class="text-center mt-4">
+                            <p class="mb-0">Don't have an account? <a href="/register" class="register-link">Register</a></p>
+                            <p class="mt-2"><a href="#" class="forgot-link" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Forgot Password?</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Forgot Password Modal -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Reset Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="emailStep">
+                    <p class="text-muted mb-4">Enter your email address to receive a password reset code.</p>
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="resetEmail" placeholder="name@example.com">
+                        <label for="resetEmail"><i class="fas fa-envelope"></i> Email address</label>
+                    </div>
+                    <button onclick="sendResetCode()" class="btn btn-primary w-100" id="sendCodeBtn">
+                        <span class="button-content">
+                            <i class="fas fa-paper-plane"></i> Send Reset Code
+                        </span>
+                        <span class="button-loader d-none">
+                            <i class="fas fa-circle-notch fa-spin"></i> Sending...
+                        </span>
+                    </button>
+                </div>
+                
+                <div id="otpStep" style="display: none;">
+                    <p class="text-muted mb-4">Enter the 6-digit code sent to your email.</p>
+                    <div class="otp-input-container mb-3">
+                        <input type="text" maxlength="6" class="form-control text-center" id="otpInput" placeholder="000000">
+                    </div>
+                    <button onclick="verifyOTP()" class="btn btn-primary w-100" id="verifyOtpBtn">
+                        <span class="button-content">
+                            <i class="fas fa-check-circle"></i> Verify Code
+                        </span>
+                        <span class="button-loader d-none">
+                            <i class="fas fa-circle-notch fa-spin"></i> Verifying...
+                        </span>
+                    </button>
+                </div>
+
+                <div id="passwordStep" style="display: none;">
+                    <p class="text-muted mb-4">Enter your new password.</p>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="newPassword" placeholder="New Password">
+                        <label for="newPassword"><i class="fas fa-lock"></i> New Password</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password">
+                        <label for="confirmPassword"><i class="fas fa-lock"></i> Confirm Password</label>
+                    </div>
+                    <button onclick="resetPassword()" class="btn btn-primary w-100" id="resetPasswordBtn">
+                        <span class="button-content">
+                            <i class="fas fa-save"></i> Reset Password
+                        </span>
+                        <span class="button-loader d-none">
+                            <i class="fas fa-circle-notch fa-spin"></i> Resetting...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.auth-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+    padding-top: 100px;
+}
+
+.auth-card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    margin: 20px;
+}
+
+.auth-icon {
+    font-size: 2.5rem;
+    color: #ff4b6e;
+    margin-bottom: 1rem;
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.form-floating {
+    position: relative;
+}
+
+.form-floating > label {
+    padding-left: 2.5rem;
+}
+
+.form-floating > label i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ff4b6e;
+}
+
+.form-control {
+    border-radius: 10px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    padding-left: 2.5rem;
+    height: 3.5rem;
+}
+
+.form-control:focus {
+    border-color: #ff4b6e;
+    box-shadow: 0 0 0 0.2rem rgba(255, 75, 110, 0.25);
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #ff4b6e, #ff758c);
+    border: none;
+    border-radius: 10px;
+    padding: 0.8rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 75, 110, 0.3);
+}
+
+.btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.button-loader, .button-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.d-none {
+    display: none !important;
+}
+
+.register-link {
+    color: #ff4b6e;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.register-link:hover {
+    color: #ff758c;
+    text-decoration: underline;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-100%); opacity: 0; }
+}
+
+@media (max-width: 768px) {
+    .auth-container {
+        padding-top: 80px;
+    }
+
+    .auth-card {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    .form-control {
+        height: 3rem;
+    }
+}
+
+.modal-content {
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    padding: 1.5rem;
+    background: linear-gradient(45deg, #ff4b6e, #ff758c);
+    border-radius: 20px 20px 0 0;
+}
+
+.modal-title {
+    color: white;
+    font-weight: 600;
+}
+
+.btn-close {
+    filter: brightness(0) invert(1);
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.otp-input-container input {
+    font-size: 24px;
+    letter-spacing: 12px;
+    font-weight: 600;
+}
+
+.forgot-link {
+    color: #ff4b6e;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.forgot-link:hover {
+    color: #ff758c;
+    text-decoration: underline;
+}
+</style>
+
+<script>
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    
+    try {
+        const response = await fetch('/user/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            // Store token in both localStorage and cookie
+            localStorage.setItem('token', data.token);
+            document.cookie = `token=${data.token}; path=/; max-age=86400`;
+            
+            showToast('Login successful!', 'success');
+            
+            // Check if user is admin and redirect accordingly
+            if (data.role === 'admin') {
+                setTimeout(() => window.location.href = '/admin/dashboard', 1000);
+            } else {
+                setTimeout(() => window.location.href = '/', 1000);
+            }
+        } else if (data.status === 'unverified') {
+            // Show verification modal if user is unverified
+            document.getElementById('emailStep').style.display = 'none';
+            document.getElementById('otpStep').style.display = 'block';
+            showToast('Please verify your email to continue', 'info');
+        } else {
+            showToast(data.message || 'Login failed', 'error');
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        showToast('Login failed. Please try again.', 'error');
+    }
+});
+
+function showToast(message, type = 'info') {
+    const colors = {
+        success: 'toast-theme-success',
+        error: 'toast-theme-error',
+        info: 'toast-theme-info'
+    };
+
+    const icons = {
+        success: 'fas fa-check-circle',
+        error: 'fas fa-exclamation-circle',
+        info: 'fas fa-info-circle'
+    };
+    
+    const isMobile = window.innerWidth <= 768;
+    
+    Toastify({
+        text: `<i class="${icons[type]}"></i> ${message}`,
+        duration: 3000,
+        gravity: "top",
+        position: isMobile ? "center" : "right",
+        className: colors[type],
+        stopOnFocus: true,
+        escapeMarkup: false,
+        style: {
+            fontSize: isMobile ? "13px" : "14px",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            width: isMobile ? "100%" : "auto",
+            maxWidth: "500px"
+        },
+        offset: {
+            x: isMobile ? 0 : 15,
+            y: isMobile ? 15 : 80
+        },
+        onClick: function(){} // Prevents accidental dismissal
+    }).showToast();
+}
+
+let userId = null;
+let resetToken = null;
+
+function setLoading(buttonId, isLoading) {
+    const btn = document.getElementById(buttonId);
+    const content = btn.querySelector('.button-content');
+    const loader = btn.querySelector('.button-loader');
+    
+    btn.disabled = isLoading;
+    content.classList.toggle('d-none', isLoading);
+    loader.classList.toggle('d-none', !isLoading);
+}
+
+function resetModalToStart() {
+    // Reset display states
+    document.getElementById('emailStep').style.display = 'block';
+    document.getElementById('otpStep').style.display = 'none';
+    document.getElementById('passwordStep').style.display = 'none';
+    
+    // Clear all inputs
+    document.getElementById('resetEmail').value = '';
+    document.getElementById('otpInput').value = '';
+    document.getElementById('newPassword').value = '';
+    document.getElementById('confirmPassword').value = '';
+    
+    // Reset state variables
+    userId = null;
+    resetToken = null;
+    
+    // Reset any button loading states
+    ['sendCodeBtn', 'verifyOtpBtn', 'resetPasswordBtn'].forEach(btnId => {
+        const btn = document.getElementById(btnId);
+        if (btn) {
+            btn.disabled = false;
+            btn.querySelector('.button-content').classList.remove('d-none');
+            btn.querySelector('.button-loader').classList.add('d-none');
+        }
+    });
+}
+
+async function sendResetCode() {
+    const email = document.getElementById('resetEmail').value;
+    setLoading('sendCodeBtn', true);
+    
+    try {
+        const response = await fetch('/user/forgotPassword', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        const data = await response.json();
+        
+        if (response.ok) {
+            userId = data.userId;
+            document.getElementById('emailStep').style.display = 'none';
+            document.getElementById('otpStep').style.display = 'block';
+            showToast('Reset code sent to your email!', 'success');
+        } else {
+            showToast(data.message || 'Failed to send reset code', 'error');
+        }
+    } catch (error) {
+        showToast('An error occurred', 'error');
+    } finally {
+        setLoading('sendCodeBtn', false);
+    }
+}
+
+async function verifyOTP() {
+    const otp = document.getElementById('otpInput').value;
+    
+    if (otp.length !== 6) {
+        showToast('Please enter a valid 6-digit code', 'error');
+        return;
+    }
+    
+    setLoading('verifyOtpBtn', true);
+    resetToken = otp;
+    
+    try {
+        // Simulate OTP verification delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        document.getElementById('otpStep').style.display = 'none';
+        document.getElementById('passwordStep').style.display = 'block';
+    } finally {
+        setLoading('verifyOtpBtn', false);
+    }
+}
+
+async function resetPassword() {
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    
+    if (newPassword !== confirmPassword) {
+        showToast('Passwords do not match', 'error');
+        return;
+    }
+    
+    setLoading('resetPasswordBtn', true);
+    
+    try {
+        const response = await fetch('/user/resetPassword', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId,
+                resetToken,
+                newPassword
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            showToast('Password reset successful!', 'success');
+            const modal = bootstrap.Modal.getInstance(document.getElementById('forgotPasswordModal'));
+            modal.hide();
+        } else {
+            showToast(data.message || 'Failed to reset password', 'error');
+        }
+    } catch (error) {
+        showToast('An error occurred', 'error');
+    } finally {
+        setLoading('resetPasswordBtn', false);
+    }
+}
+
+// Add these new event handlers at the end of your script
+// Handle forgot password link click
+document.querySelector('.forgot-link').addEventListener('click', function(e) {
+    // Reset modal to initial state before showing
+    resetModalToStart();
+});
+
+// Update the modal handlers
+$('#forgotPasswordModal').on('hide.bs.modal', function (e) {
+    // If not in email step, show confirmation
+    if (document.getElementById('emailStep').style.display === 'none') {
+        if (!confirm('Are you sure you want to cancel the password reset process?')) {
+            e.preventDefault();
+        } else {
+            // Reset immediately if user confirms
+            resetModalToStart();
+        }
+    }
+});
+
+// Remove the old hidden.bs.modal handler and replace with this one
+$('#forgotPasswordModal').on('hidden.bs.modal', function () {
+    // Reset everything when modal is fully hidden
+    resetModalToStart();
+});
+</script>
+
+<%- include('../partials/footer') %>

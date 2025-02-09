@@ -1,0 +1,183 @@
+<%- include('../partials/header') %>
+
+<script>
+// Add this at the top to ensure navbar is styled correctly on load
+document.addEventListener('DOMContentLoaded', function() {
+    const navbar = document.querySelector('.navbar');
+    navbar.classList.add('light-page');
+});
+</script>
+
+<div class="orders-container py-5">
+    <br>
+    <br>
+    <div class="container">
+        <h2 class="mb-4">My Orders</h2>
+        <div id="ordersList" class="row g-4">
+            <!-- Orders will be loaded here -->
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', async function() {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            showToast('Please login to view orders', 'error');
+            window.location.href = '/login';
+            return;
+        }
+
+        const response = await fetch('/user/getmyorders', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin'
+        });
+
+        if (response.status === 401) {
+            localStorage.removeItem('token');
+            showToast('Session expired. Please login again', 'error');
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch orders');
+        }
+
+        const data = await response.json();
+        const ordersList = document.getElementById('ordersList');
+        
+        if (data.Orders && data.Orders.length > 0) {
+            data.Orders.forEach(order => {
+                const orderCard = createOrderCard(order);
+                ordersList.appendChild(orderCard);
+            });
+        } else {
+            ordersList.innerHTML = `
+                <div class="col-12 text-center">
+                    <div class="alert alert-info">
+                        No orders found. <a href="/#product">Continue shopping</a>
+                    </div>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showToast(error.message || 'Failed to load orders', 'error');
+    }
+});
+
+function createOrderCard(order) {
+    const div = document.createElement('div');
+    div.className = 'col-md-6 col-lg-4';
+    div.innerHTML = `
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h5 class="card-title mb-0">Order #${order._id.slice(-6)}</h5>
+                    <span class="badge bg-${getStatusColor(order.orderStatus)}">${order.orderStatus}</span>
+                </div>
+                <div class="order-items">
+                    ${order.orderItems.map(item => `
+                        <div class="d-flex align-items-center mb-2">
+                            <img src="${item.images}" class="rounded me-2" style="width: 50px; height: 50px; object-fit: cover;">
+                            <div>
+                                <div class="fw-bold">${item.name}</div>
+                                <small>Quantity: ${item.quantity}</small>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="order-summary mt-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Total Amount:</span>
+                        <span class="fw-bold">₹${order.totalPrice.toFixed(2)}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
+                <small class="text-muted">
+                    ${new Date(order.createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    })}
+                </small>
+                <a href="/order-detail?id=${order._id}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-eye"></i> View Details
+                </a>
+            </div>
+        </div>
+    `;
+    return div;
+}
+
+function getStatusColor(status) {
+    switch(status.toLowerCase()) {
+        case 'processing':
+            return 'warning';
+        case 'shipped':
+            return 'info';
+        case 'delivered':
+            return 'success';
+        case 'cancelled':
+            return 'danger';
+        default:
+            return 'secondary';
+    }
+}
+</script>
+
+<style>
+.orders-container {
+    min-height: 100vh;
+    background: #f8f9fa;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.order-items {
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.badge {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.btn-outline-primary {
+    border-color: #ff4b6e;
+    color: #ff4b6e;
+}
+
+.btn-outline-primary:hover {
+    background-color: #ff4b6e;
+    border-color: #ff4b6e;
+    color: white;
+}
+
+.card-footer {
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+</style>
+
+<%- include('../partials/footer') %>

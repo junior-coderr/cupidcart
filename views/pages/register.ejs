@@ -1,0 +1,409 @@
+<%- include('../partials/header') %>
+
+<div class="auth-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="form-card-container">
+                <div class="auth-card">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-plus auth-icon"></i>
+                        <h2>Create Account</h2>
+                        <p class="text-muted">Join our Valentine's special store</p>
+                    </div>
+                    <!-- Step 1: Email Form -->
+                    <div id="emailStep">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="verifyEmail" placeholder="name@example.com" required>
+                            <label for="verifyEmail"><i class="fas fa-envelope"></i> Email address</label>
+                        </div>
+                        <button onclick="sendVerificationCode()" class="btn btn-primary w-100">
+                            <span class="button-content">
+                                <i class="fas fa-paper-plane"></i> Send OTP
+                            </span>
+                            <span class="button-loader d-none">
+                                <i class="fas fa-circle-notch fa-spin"></i> Sending...
+                            </span>
+                        </button>
+                    </div>
+
+                    <!-- Step 2: OTP Verification -->
+                    <div id="otpStep" style="display: none;">
+                        <div class="text-center mb-3">
+                            <p>Please enter the verification code sent to your email</p>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control text-center" id="otpInput" maxlength="6" placeholder="000000">
+                            <label for="otpInput"><i class="fas fa-key"></i> Verification Code</label>
+                        </div>
+                        <button onclick="verifyOTP()" class="btn btn-primary w-100 mb-3">
+                            <i class="fas fa-check-circle"></i> Verify Code
+                        </button>
+                        <div class="text-center">
+                            <a href="#" onclick="resendOTP()" class="text-muted">Resend Code</a>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Registration Form -->
+                    <form id="registrationForm" action="/user/register" method="POST" style="display: none;">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="firstname" name="firstname" placeholder="First Name" required>
+                                    <label for="firstname"><i class="fas fa-user"></i> First Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Last Name" required>
+                                    <label for="lastname"><i class="fas fa-user"></i> Last Name</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-floating mt-3">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+                            <label for="email"><i class="fas fa-envelope"></i> Email address</label>
+                        </div>
+                        <div class="form-floating mt-3">
+                            <input type="tel" class="form-control" id="mobile" name="mobile" placeholder="Mobile" required>
+                            <label for="mobile"><i class="fas fa-phone"></i> Mobile</label>
+                        </div>
+                        <div class="form-floating mt-3">
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                            <label for="password"><i class="fas fa-lock"></i> Password</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-4">
+                            <span class="button-content">
+                                <i class="fas fa-user-plus"></i> Create Account
+                            </span>
+                            <span class="button-loader d-none">
+                                <i class="fas fa-circle-notch fa-spin"></i> Creating account...
+                            </span>
+                        </button>
+                        <div class="text-center mt-4">
+                            <p class="mb-0">Already have an account? <a href="/login" class="login-link">Login</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.auth-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+    padding-top: 100px;
+}
+
+.auth-card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    margin: 20px;
+}
+
+.auth-icon {
+    font-size: 2.5rem;
+    color: #ff4b6e;
+    margin-bottom: 1rem;
+}
+
+.form-floating {
+    position: relative;
+}
+
+.form-floating > label {
+    padding-left: 2.5rem;
+}
+
+.form-floating > label i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ff4b6e;
+}
+
+.form-control {
+    border-radius: 10px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    padding-left: 2.5rem;
+    height: 3.5rem;
+}
+
+.form-control:focus {
+    border-color: #ff4b6e;
+    box-shadow: 0 0 0 0.2rem rgba(255, 75, 110, 0.25);
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #ff4b6e, #ff758c);
+    border: none;
+    border-radius: 10px;
+    padding: 0.8rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 75, 110, 0.3);
+}
+
+.login-link {
+    color: #ff4b6e;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.login-link:hover {
+    color: #ff758c;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .auth-container {
+        padding-top: 80px;
+    }
+
+    .auth-card {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    .form-control {
+        height: 3rem;
+    }
+
+    .row {
+        margin: 0 -5px;
+    }
+
+    .col-md-6 {
+        padding: 0 5px;
+    }
+}
+
+.btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.button-loader, .button-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.d-none {
+    display: none !important;
+}
+</style>
+
+<script>
+let verifiedEmail = '';
+
+async function sendVerificationCode() {
+    const email = document.getElementById('verifyEmail').value;
+    const button = document.querySelector('#emailStep button');
+    const btnContent = button.querySelector('.button-content');
+    const btnLoader = button.querySelector('.button-loader');
+
+    if (!email || !email.includes('@')) {
+        showToast('Please enter a valid email address', 'error');
+        return;
+    }
+
+    try {
+        button.disabled = true;
+        btnContent.classList.add('d-none');
+        btnLoader.classList.remove('d-none');
+
+        const response = await fetch('/user/send-verification', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            document.getElementById('emailStep').style.display = 'none';
+            document.getElementById('otpStep').style.display = 'block';
+            showToast('Verification code sent!', 'success');
+        } else {
+            showToast(data.message || 'Failed to send verification code', 'error');
+        }
+    } catch (error) {
+        showToast('Error sending verification code', 'error');
+    } finally {
+        button.disabled = false;
+        btnContent.classList.remove('d-none');
+        btnLoader.classList.add('d-none');
+    }
+}
+
+async function verifyOTP() {
+    const email = document.getElementById('verifyEmail').value;
+    const otp = document.getElementById('otpInput').value;
+
+    try {
+        const response = await fetch('/user/verify-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, otp })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            verifiedEmail = email;
+            document.getElementById('otpStep').style.display = 'none';
+            document.getElementById('registrationForm').style.display = 'block';
+            document.getElementById('email').value = email;
+            document.getElementById('email').readOnly = true;
+            showToast('Email verified successfully!', 'success');
+        } else {
+            showToast(data.message || 'Invalid verification code', 'error');
+        }
+    } catch (error) {
+        showToast('Error verifying code', 'error');
+    }
+}
+
+async function resendOTP() {
+    const email = document.getElementById('verifyEmail').value;
+    try {
+        const response = await fetch('/user/send-verification', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showToast('New verification code sent!', 'success');
+        } else {
+            showToast(data.message || 'Failed to resend code', 'error');
+        }
+    } catch (error) {
+        showToast('Error resending code', 'error');
+    }
+}
+
+// Modify the existing form submit handler
+document.querySelector('#registrationForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    if (document.getElementById('email').value !== verifiedEmail) {
+        showToast('Please verify your email first', 'error');
+        return;
+    }
+
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const btnContent = submitBtn.querySelector('.button-content');
+    const btnLoader = submitBtn.querySelector('.button-loader');
+    
+    // Form validation
+    const password = document.getElementById('password').value;
+    if (password.length < 6) {
+        showToast('Password must be at least 6 characters long', 'error');
+        return;
+    }
+
+    // Show loading state
+    submitBtn.disabled = true;
+    btnContent.classList.add('d-none');
+    btnLoader.classList.remove('d-none');
+    
+    const formData = {
+        firstname: document.getElementById('firstname').value,
+        lastname: document.getElementById('lastname').value,
+        email: document.getElementById('email').value,
+        mobile: document.getElementById('mobile').value,
+        password: password
+    };
+
+    try {
+        const response = await fetch('/user/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            // Store token in localStorage
+            localStorage.setItem('token', data.token);
+            
+            showToast('✨ Welcome aboard! Account created successfully', 'success');
+            setTimeout(() => {
+                showToast('🚀 Taking you to dashboard...', 'info');
+                setTimeout(() => {
+                    window.location.href = '/'; // Redirect to dashboard instead of login
+                }, 1000);
+            }, 1500);
+        } else {
+            showToast(data.message || 'Registration failed. Please try again.', 'error');
+            submitBtn.disabled = false;
+            btnContent.classList.remove('d-none');
+            btnLoader.classList.add('d-none');
+        }
+    } catch (error) {
+        showToast('⚠️ Network error. Please check your connection.', 'error');
+        console.error(error);
+        submitBtn.disabled = false;
+        btnContent.classList.remove('d-none');
+        btnLoader.classList.add('d-none');
+    }
+});
+
+function showToast(message, type = 'info') {
+    const colors = {
+        success: 'toast-theme-success',
+        error: 'toast-theme-error',
+        info: 'toast-theme-info'
+    };
+
+    const icons = {
+        success: 'fas fa-check-circle',
+        error: 'fas fa-exclamation-circle',
+        info: 'fas fa-info-circle'
+    };
+    
+    const isMobile = window.innerWidth <= 768;
+    
+    Toastify({
+        text: `<i class="${icons[type]}"></i> ${message}`,
+        duration: 3000,
+        gravity: "top",
+        position: isMobile ? "center" : "right",
+        className: colors[type],
+        stopOnFocus: true,
+        escapeMarkup: false,
+        style: {
+            fontSize: isMobile ? "13px" : "14px",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            width: isMobile ? "100%" : "auto",
+            maxWidth: "500px"
+        },
+        offset: {
+            x: isMobile ? 0 : 15,
+            y: isMobile ? 15 : 80
+        },
+        onClick: function(){} // Prevents accidental dismissal
+    }).showToast();
+}
+</script>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CupidCart - Valentine's Special Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+    /* Update toast container styles */
+    .Toastify__toast-container {
+        z-index: 9999;
+        position: fixed;
+        padding: 4px;
+        width: auto;
+        box-sizing: border-box;
+        max-width: 500px;
+    }
+
+    /* Base toast styles */
+    .Toastify__toast {
+        font-family: 'Poppins', sans-serif;
+        border-radius: 12px;
+        padding: 16px;
+        margin: 8px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-height: auto;
+    }
+
+    /* Toast themes with consistent gradients */
+    .toast-theme-success {
+        background: linear-gradient(135deg, #28a745, #20c997) !important;
+        color: white !important;
+    }
+
+    .toast-theme-error {
+        background: linear-gradient(135deg, #dc3545, #ff4b6e) !important;
+        color: white !important;
+    }
+
+    .toast-theme-info {
+        background: linear-gradient(135deg, #0dcaf0, #0099cc) !important;
+        color: white !important;
+    }
+
+    .toast-theme-warning {
+        background: linear-gradient(135deg, #ffc107, #ffb300) !important;
+        color: #000 !important;
+    }
+
+    /* Toast icons */
+    .Toastify__toast i {
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    /* Toast animations */
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideInTop {
+        from {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .Toastify__toast {
+        animation: slideInRight 0.3s ease forwards;
+    }
+
+    /* Responsive styles for mobile devices */
+    @media (max-width: 768px) {
+        .Toastify__toast-container {
+            width: 90%;
+            left: 50% !important;
+            transform: translateX(-50%);
+            top: 1rem;
+        }
+
+        .Toastify__toast {
+            margin: 8px auto;
+            font-size: 13px;
+            padding: 12px;
+            animation: slideInTop 0.3s ease forwards;
+        }
+
+        .Toastify__toast i {
+            font-size: 1rem;
+        }
+    }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-heart"></i> CupidCart
+            </a>
+            <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <div class="hamburger-icon">
+                    <span class="line line-1"></span>
+                    <span class="line line-2"></span>
+                    <span class="line line-3"></span>
+                </div>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <!-- <a class="nav-link" href="/"><i class="fas fa-home"></i> Home</a> -->
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login"><i class="fas fa-user"></i> Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link special-btn" href="/register">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const token = localStorage.getItem('token') || getCookie('token');
+        const navLinks = document.querySelector('.navbar-nav');
+        
+        if (token) {
+            try {
+                // Fetch user profile to check if admin
+                const response = await fetch('/user/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user profile');
+                }
+                
+                const userData = await response.json();
+                console.log('User data:', userData); // Debug log
+                
+                navLinks.innerHTML = `
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/orders"><i class="fas fa-box"></i> Orders</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i> Account
+                        </a>
+                        <ul class="dropdown-menu">
+                       
+                            ${userData.role === 'admin' ? `
+                            <li><a class="dropdown-item" href="/admin/dashboard">
+                                <i class="fas fa-tachometer-alt"></i> Admin Dashboard
+                            </a></li>
+                            ` : ''}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                `;
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                // Handle error - maybe show a toast notification
+                showToast('Error loading user data', 'error');
+                // Remove token if it's invalid
+                if (error.message.includes('401')) {
+                    localStorage.removeItem('token');
+                    document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                    window.location.href = '/login';
+                }
+            }
+        }
+    });
+
+    function logout() {
+        localStorage.removeItem('token');
+        document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        window.location.href = '/login';
+    }
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    // Add scroll effect to navbar
+    window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // Add this new script
+    document.addEventListener('DOMContentLoaded', function() {
+        const headerBuyBtn = document.querySelector('.header-buy-btn');
+        const productSection = document.querySelector('.product-preview');
+        
+        function checkScroll() {
+            if (!productSection) return;
+            
+            const rect = productSection.getBoundingClientRect();
+            const isVisible = rect.top <= window.innerHeight && rect.bottom >= 0;
+            
+            if (isVisible) {
+                headerBuyBtn.classList.add('show');
+            } else {
+                headerBuyBtn.classList.remove('show');
+            }
+        }
+
+        window.addEventListener('scroll', checkScroll);
+        checkScroll(); // Initial check
+    });
+
+    function scrollToBottom() {
+        const featuredSection = document.getElementById('product');
+        if (featuredSection) {
+            featuredSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+    // Add this helper function after existing scripts
+    function showToast(message, type = 'info') {
+        const colors = {
+            success: 'toast-theme-success',
+            error: 'toast-theme-error',
+            info: 'toast-theme-info',
+            warning: 'toast-theme-warning'
+        };
+
+        const icons = {
+            success: 'fas fa-check-circle',
+            error: 'fas fa-exclamation-circle',
+            info: 'fas fa-info-circle',
+            warning: 'fas fa-exclamation-triangle'
+        };
+        
+        const isMobile = window.innerWidth <= 768;
+        
+        Toastify({
+            text: `<i class="${icons[type]}"></i> ${message}`,
+            duration: 3000,
+            gravity: "top",
+            position: isMobile ? "center" : "right",
+            className: colors[type],
+            stopOnFocus: true,
+            escapeMarkup: false,
+            style: {
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                width: isMobile ? "100%" : "auto",
+                maxWidth: "500px"
+            },
+            offset: {
+                x: isMobile ? 0 : 15,
+                y: isMobile ? 15 : 80
+            },
+            onClick: function(){} // Prevents accidental dismissal
+        }).showToast();
+    }
+    </script>
+
+    <style>
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background-color: transparent;
+        backdrop-filter: blur(0px);
+        transition: all 0.3s ease;
+        padding: 1rem 0;
+    }
+
+    /* Add styles for light pages */
+    .navbar.light-page {
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .navbar.light-page .navbar-brand,
+    .navbar.light-page .nav-link {
+        color: #1a1a1a !important;
+    }
+
+    .navbar.light-page .special-btn {
+        background-color: var(--primary-color);
+        border: none;
+        color: white !important;
+    }
+
+    .navbar.scrolled {
+        background-color: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .navbar-brand, .nav-link {
+        color: white !important;
+        transition: all 0.3s ease;
+    }
+
+    .navbar.scrolled .navbar-brand,
+    .navbar.scrolled .nav-link {
+        color: #1a1a1a !important;
+    }
+
+    .special-btn {
+        background-color: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .navbar.scrolled .special-btn {
+        background-color: var(--primary-color);
+        border: none;
+        color: white !important;
+    }
+
+    .navbar .navbar-collapse.show,
+    .navbar .navbar-collapse.collapsing {
+        background: rgba(255, 255, 255, 0.95);
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar .navbar-collapse.show .nav-link,
+    .navbar .navbar-collapse.collapsing .nav-link {
+        color: #1a1a1a !important;
+    }
+
+    .hamburger-icon {
+        width: 30px;
+        height: 24px;
+        position: relative;
+        cursor: pointer;
+        outline: none;
+    }
+
+    .hamburger-icon .line {
+        display: block;
+        position: absolute;
+        height: 2px;
+        width: 100%;
+        background: white;
+        border-radius: 4px;
+        opacity: 1;
+        left: 0;
+        transform: rotate(0deg);
+        transition: all 0.3s ease;
+        outline: none;
+    }
+
+    .navbar-toggler {
+        border: none !important;
+        padding: 0;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    .navbar-toggler:focus {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    .hamburger-icon .line-1 {
+        top: 0;
+    }
+
+    .hamburger-icon .line-2 {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .hamburger-icon .line-3 {
+        bottom: 0;
+    }
+
+    .navbar-toggler[aria-expanded="true"] .line-1 {
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+    }
+
+    .navbar-toggler[aria-expanded="true"] .line-2 {
+        opacity: 0;
+    }
+
+    .navbar-toggler[aria-expanded="true"] .line-3 {
+        bottom: 50%;
+        transform: translateY(50%) rotate(-45deg);
+    }
+
+    .hamburger-icon span {
+        background: white;
+        transition: background-color 0.3s ease;
+    }
+
+    .navbar.scrolled .hamburger-icon span {
+        background: #1a1a1a;
+    }
+
+    .navbar.scrolled .hamburger-icon .line {
+        background: #1a1a1a;
+    }
+
+    @supports not (backdrop-filter: blur(10px)) {
+        .navbar.scrolled {
+            background-color: rgba(255, 255, 255, 0.98);
+        }
+    }
+
+    /* Add these new hover effect styles */
+    @media (max-width: 991px) {
+        .navbar-collapse .nav-link {
+            position: relative;
+            padding: 12px 20px !important;
+            margin: 5px 0;
+            border-radius: 10px;
+            transition: all 0.3s ease !important;
+            transform: translateX(0);
+        }
+
+        .navbar-collapse .nav-link:hover {
+            background: rgba(255, 75, 110, 0.1);
+            transform: translateX(8px);
+            padding-left: 25px !important;
+        }
+
+        .navbar-collapse .nav-link:active {
+            transform: translateX(4px);
+        }
+
+        .navbar-collapse .nav-link i {
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .navbar-collapse .nav-link:hover i {
+            transform: scale(1.2);
+            color: #ff4b6e;
+        }
+
+        /* Special treatment for the sign-up button */
+        .navbar-collapse .special-btn {
+            background: linear-gradient(45deg, #ff4b6e, #ff758c);
+            color: white !important;
+            transform: scale(1);
+        }
+
+        .navbar-collapse .special-btn:hover {
+            transform: scale(1.03) translateX(8px);
+            background: linear-gradient(45deg, #ff758c, #ff4b6e);
+            box-shadow: 0 4px 15px rgba(255, 75, 110, 0.3);
+        }
+    }
+
+    /* Add these new dropdown styles */
+    .dropdown-menu {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 0.8rem 0;
+        margin-top: 0.5rem;
+        overflow: hidden; /* Add this to contain hover effects */
+    }
+
+    .dropdown-item {
+        color: #1a1a1a !important;
+        padding: 0.7rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        position: relative; /* Add this */
+        transform-origin: left; /* Add this */
+    }
+
+    .dropdown-item i {
+        color: #ff4b6e;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        position: relative; /* Add this */
+        z-index: 1; /* Add this */
+    }
+
+    .dropdown-item:hover {
+        background: rgba(255, 75, 110, 0.1);
+        padding-left: 2rem; /* Change from transform to padding */
+    }
+
+    .dropdown-item:hover i {
+        transform: scale(1.2);
+    }
+
+    @media (max-width: 991px) {
+        .dropdown-menu {
+            background: transparent;
+            box-shadow: none;
+            padding: 0;
+            margin-top: 0;
+            border-left: 2px solid rgba(255, 75, 110, 0.2);
+            margin-left: 1rem;
+            overflow: visible; /* Allow overflow on mobile */
+        }
+
+        .dropdown-item {
+            padding: 0.7rem 1rem;
+        }
+
+        .dropdown-item:hover {
+            padding-left: 1.5rem; /* Adjust padding for mobile */
+            background: rgba(255, 75, 110, 0.05);
+        }
+    }
+
+    .dropdown-divider {
+        border-color: rgba(0, 0, 0, 0.1);
+        margin: 0.5rem 0;
+    }
+
+    /* Handle scrolled state */
+    .navbar.scrolled .dropdown-menu {
+        background: rgba(255, 255, 255, 0.98);
+    }
+
+    @media (max-width: 991px) {
+        .dropdown-menu {
+            background: transparent;
+            box-shadow: none;
+            padding: 0;
+            margin-top: 0;
+            border-left: 2px solid rgba(255, 75, 110, 0.2);
+            margin-left: 1rem;
+        }
+
+        .dropdown-item {
+            padding: 0.7rem 1rem;
+        }
+
+        .dropdown-divider {
+            display: none;
+        }
+    }
+    </style>
+</body>
+</html>

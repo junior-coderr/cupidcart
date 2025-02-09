@@ -1,0 +1,890 @@
+<%- include('../partials/header') %>
+
+<div class="hero-section" style="margin-top: 0; padding-top: 76px;">
+    <div class="blur-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; backdrop-filter: blur(0px); transition: backdrop-filter 0.3s ease;"></div>
+    <div class="hero-content" style="position: relative; z-index: 1; padding-top: 76px;">
+        <div class="mobile-brand">CupidCart</div>
+        <h1>Express Your Love</h1>
+        <p class="hero-subtitle">Curated Valentine's Day Gifts for Your Special Someone</p>
+        <a href="#product" class="cta-button">
+            <span>Discover Our Collection</span>
+            <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+</div>
+
+<section class="product-preview py-5">
+    <div class="container">
+        <h2 class="section-title text-center mb-4">Our Valentine's Collection</h2>
+        <div class="section-subtitle text-center mb-5">Choose the Perfect Gift</div>
+        
+        <div class="slider-container">
+            <div class="slider-wrapper">
+                <div class="slide">
+                    <div class="collection-card">
+                        <div class="card-image">
+                            <img src="/images/individual/img4.png" 
+                                 alt="Luxury Chocolates"
+                                 class="main-img">
+                            <div class="card-overlay">
+                                <div class="card-content">
+                                    <h3>Silky Love</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="collection-card">
+                        <div class="card-image">
+                            <img src="/images/individual/img5.png" 
+                                 alt="Rose Bouquet"
+                                 class="main-img">
+                            <div class="card-overlay">
+                                <div class="card-content">
+                                    <h3>Sweet Whispers</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="collection-card">
+                        <div class="card-image">
+                            <img src="/images/individual/img6.png" 
+                                 alt="Scented Candles"
+                                 class="main-img">
+                            <div class="card-overlay">
+                                <div class="card-content">
+                                    <h3>Cuddle Buddy</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="collection-card">
+                        <div class="card-image">
+                            <img src="/images/individual/img7.png" 
+                                 alt="Scented Candles"
+                                 class="main-img">
+                            <div class="card-overlay">
+                                <div class="card-content">
+                                    <h3>Lustrous Charm</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="collection-card">
+                        <div class="card-image">
+                            <img src="/images/individual/img8.png" 
+                                 alt="Scented Candles"
+                                 class="main-img">
+                            <div class="card-overlay">
+                                <div class="card-content">
+                                    <h3>Rosé Bliss</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="collection-card">
+                        <div class="card-image">
+                            <img src="/images/main/img1.png" 
+                                 alt="Scented Candles"
+                                 class="main-img">
+                            <div class="card-overlay">
+                                <div class="card-content">
+                                    <h3>Flirt Box</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="collection-card">
+                        <div class="card-image">
+                            <img src="/images/main/img3.png" 
+                                 alt="Scented Candles"
+                                 class="main-img">
+                            <div class="card-overlay">
+                                <div class="card-content">
+                                    <h3>Flirt Box</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="collection-card">
+                        <div class="card-image">
+                            <img src="/images/main/img2.png" 
+                                 alt="Scented Candles"
+                                 class="main-img">
+                            <div class="card-overlay">
+                                <div class="card-content">
+                                    <h3>Flirt Box</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="featured-section py-5 bg-light" id="product">
+    <div class="container">
+        <section class="featured-product">
+            <div class="row g-4">
+                <div class="col-12 col-lg-6">
+                    <div class="product-showcase p-3 bg-white rounded-3 shadow-sm">
+                        <div class="product-gallery">
+                            <h2 class="mb-4 ">Flirt Box</h2>
+                            <div class="main-image mb-3">
+                                <img src="/images/main/img1.png" 
+                                     alt="Valentine Hamper" 
+                                     id="mainImage" 
+                                     class="w-100 rounded-3">
+                            </div>
+                            <div class="thumbnail-container d-flex gap-2 overflow-auto pb-2">
+                                <img src="/images/main/img1.png" class="thumbnail active" onclick="changeImage(this.src)">
+                                <img src="/images/main/img2.png" class="thumbnail" onclick="changeImage(this.src)">
+                                <img src="/images/main/img3.png" class="thumbnail" onclick="changeImage(this.src)">
+                                <img src="/images/individual/img4.png" class="thumbnail" onclick="changeImage(this.src)">
+                                <img src="/images/individual/img5.png" class="thumbnail" onclick="changeImage(this.src)">
+                                <img src="/images/individual/img6.png" class="thumbnail" onclick="changeImage(this.src)">
+                                <img src="/images/individual/img7.png" class="thumbnail" onclick="changeImage(this.src)">
+                                <img src="/images/individual/img8.png" class="thumbnail" onclick="changeImage(this.src)">
+                            </div>
+                        </div>
+                        <div class="valentine-badges flex gap-2 mt-3 ">
+                            <span class="heart-badge"><i class="fas fa-heart"></i> Limited Edition</span>
+                            <span class="heart-badge"><i class="fas fa-gift"></i> Special Gift Wrap</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="product-details p-3 bg-white rounded-3 shadow-sm h-100">
+                        <div class="limited-offer">Limited Time Offer</div>
+                        <h2>Luxury Valentine's Hamper</h2>
+                        <div class="price-tag">₹2199 <span class="original-price">₹2499</span></div>
+                        
+                        <!-- Add delivery info section -->
+                        <div class="delivery-info mb-4">
+                            <div class="delivery-date">
+                                <i class="fas fa-truck"></i>
+                                <span id="deliveryDate">Calculating delivery date...</span>
+                            </div>
+                            <div class="delivery-type">2 Days Standard Delivery</div>
+                        </div>
+
+                        <div class="hamper-contents">
+                            <h3>What's Inside:</h3>
+                            <ul class="gift-list">
+                                <li><i class="fas fa-heart"></i> Dairy Milk Silk Love Edition</li>
+                                <li><i class="fas fa-heart"></i> Teddy</li>
+                                <li><i class="fas fa-heart"></i> Rose Perfume</li>
+                                <li><i class="fas fa-heart"></i> Ring</li>
+                                <li><i class="fas fa-heart"></i> Necklace </li>
+                                <li><i class="fas fa-heart"></i> Small Notes-Taking Book</li>
+                                <li><i class="fas fa-heart"></i> Heart Keychain</li>
+                            </ul>
+                        </div>
+                        <button class="add-to-cart-btn">
+                            <i class="fas fa-shopping-bag"></i> Buy Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<style>
+/* Updated styling for preview cards */
+.preview-column {
+    padding: 0;
+}
+
+.preview-card {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+
+.preview-image {
+    position: relative;
+    height: 100vh;
+    max-height: 800px;
+}
+
+.preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.preview-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.2));
+    display: flex;
+    align-items: flex-end;
+    padding: 3rem 2rem;
+    transition: all 0.5s ease;
+}
+
+.preview-content {
+    color: white;
+    max-width: 500px;
+}
+
+.category-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    backdrop-filter: blur(5px);
+}
+
+.preview-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+}
+
+.preview-price {
+    font-size: 1.8rem;
+    color: #ffd700;
+    font-weight: 600;
+}
+
+.preview-btn {
+    background: white;
+    color: black;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.preview-btn:hover {
+    background: #ffd700;
+    transform: translateY(-3px);
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .preview-image {
+        height: 100vh;  /* Full viewport height on mobile */
+    }
+
+    .preview-overlay {
+        padding: 2rem 1.5rem;
+        background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.3));
+    }
+
+    .preview-title {
+        font-size: 2.8rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .preview-price {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .preview-btn {
+        width: 100%;
+        padding: 1.2rem;
+        font-size: 1.3rem;
+    }
+
+    .section-title {
+        font-size: 2.8rem !important;
+        padding: 0 1rem;
+    }
+
+    .section-subtitle {
+        padding: 0 1rem;
+    }
+}
+
+/* Enhance animations */
+.preview-card {
+    animation: fadeIn 1s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(1.1);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.collection-card {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    background: #fff;
+}
+
+.card-image {
+    position: relative;
+    aspect-ratio: 4/5;
+    overflow: hidden;
+}
+
+.main-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    color: white;
+    transform: translateY(0);
+    transition: opacity 0.3s ease;
+}
+
+.card-content {
+    text-align: center;
+}
+
+.card-content h3 {
+    font-size: 1.8rem;
+    margin: 0;
+    font-weight: 600;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Remove unused styles */
+.badge-tag, .price, .shop-btn {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .card-content h3 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Add this to your existing styles */
+.product-preview {
+    position: relative;
+    overflow-x: hidden;  /* Add this to contain the slider */
+    width: 100%;
+}
+
+.slider-container {
+    position: relative;
+    overflow: hidden; /* Changed back to hidden */
+    padding: 20px 0;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.slider-wrapper {
+    display: flex;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 20px;
+    padding: 20px 0;
+    margin: 0 auto;
+}
+
+.slide {
+    min-width: calc(33.333% - 20px);
+    max-width: 400px;
+    opacity: 0.6;
+    transform: scale(0.95); /* Changed from 1 to 0.95 */
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto; /* Changed to allow interaction */
+    margin: 0 auto;
+}
+
+.slide.active {
+    opacity: 1;
+    transform: scale(1.05); /* Changed from 1 to 1.05 */
+    z-index: 2;
+}
+
+.collection-card {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    background: #fff;
+    will-change: transform; /* Add this for better performance */
+}
+
+.slide.active .collection-card {
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15); /* Enhanced shadow for active card */
+}
+
+@media (max-width: 768px) {
+    .slider-container {
+        max-width: 100%;
+        padding: 20px 15px;
+    }
+    
+    .slide {
+        min-width: calc(100% - 40px);
+        max-width: 320px;
+        opacity: 0.8;
+        transform: scale(0.92); /* Adjusted for mobile */
+    }
+    
+    .slide.active {
+        transform: scale(1.02); /* Slightly reduced scale for mobile */
+        opacity: 1;
+    }
+}
+
+/* Add these new mobile-specific styles */
+@media (max-width: 768px) {
+    .featured-section {
+        padding: 2rem 0;
+    }
+
+    .product-showcase {
+        border-radius: 20px;
+        margin-bottom: 1rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+
+    .main-image {
+        border-radius: 15px;
+        overflow: hidden;
+        margin: -0.5rem -0.5rem 1rem -0.5rem;
+    }
+
+    .thumbnail-container {
+        padding: 0.5rem;
+        gap: 10px;
+        scrollbar-width: none; /* Firefox */
+    }
+
+    .thumbnail-container::-webkit-scrollbar {
+        display: none; /* Chrome, Safari */
+    }
+
+    .thumbnail {
+        width: 70px;
+        height: 70px;
+        border-radius: 10px;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .thumbnail.active {
+        border-color: #ff4b6e;
+    }
+
+    .product-details {
+        border-radius: 20px;
+        padding: 1.5rem !important;
+    }
+
+    .limited-offer {
+        display: inline-block;
+        background: #ffe8ec;
+        color: #ff4b6e;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .price-tag {
+        font-size: 2rem;
+        color: #ff4b6e;
+        margin: 1rem 0;
+    }
+
+    .original-price {
+        font-size: 1.2rem;
+        color: #999;
+        text-decoration: line-through;
+        margin-left: 0.5rem;
+    }
+
+    .gift-list {
+        padding-left: 0;
+        list-style: none;
+    }
+
+    .gift-list li {
+        padding: 0.8rem 0;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .gift-list li i {
+        color: #ff4b6e;
+    }
+
+    .add-to-cart-btn {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 50px;
+        background: linear-gradient(45deg, #ff4b6e, #ff758c);
+        color: white;
+        border: none;
+        font-size: 1.1rem;
+        margin: 1.5rem 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: 0 5px 15px rgba(255, 75, 110, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .add-to-cart-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(255, 75, 110, 0.4);
+        background: linear-gradient(45deg, #ff758c, #ff4b6e);
+    }
+
+    .add-to-cart-btn:active {
+        transform: translateY(1px);
+    }
+
+    .delivery-note {
+        text-align: center;
+        color: #666;
+        font-size: 0.9rem;
+        padding: 0.5rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+
+    .valentine-badges {
+        justify-content: center;
+    }
+
+    .heart-badge {
+        background: #ffe8ec;
+        color: #ff4b6e;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+    }
+}
+
+.valentine-badges {
+    display: inline-flex;
+    gap: 6px;
+    margin-top: 0.5rem;
+    align-items: center;
+    overflow-x: auto;
+    width: 100%;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 0;
+}
+
+.valentine-badges::-webkit-scrollbar {
+    display: none;
+}
+
+.heart-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #fff0f3;
+    color: #ff4b6e;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    font-weight: 500;
+    white-space: nowrap;
+    border: 1px solid rgba(255, 75, 110, 0.15);
+    box-shadow: 0 1px 2px rgba(255, 75, 110, 0.1);
+    flex-shrink: 0;
+}
+
+.heart-badge i {
+    font-size: 0.6rem;
+}
+
+/* Add these new styles */
+.floating-buy-wrapper {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.floating-buy-wrapper.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.floating-buy-btn {
+    background: linear-gradient(45deg, #ff4b6e, #ff758c);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(255, 75, 110, 0.3);
+    transition: all 0.3s ease;
+}
+
+.floating-buy-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 75, 110, 0.4);
+    background: linear-gradient(45deg, #ff758c, #ff4b6e);
+}
+
+.floating-buy-btn:active {
+    transform: translateY(1px);
+}
+
+@media (max-width: 768px) {
+    .floating-buy-wrapper {
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .floating-buy-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Add this to your existing styles */
+.payment-methods {
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.payment-option {
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.payment-option:hover {
+    background: #f8f9fa;
+}
+
+.payment-option.selected {
+    border-color: #ff4b6e;
+    background: #fff0f3;
+}
+
+.payment-option i {
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+    color: #ff4b6e;
+}
+
+.btn-checkout {
+    background: linear-gradient(45deg, #ff4b6e, #ff758c);
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-checkout:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 75, 110, 0.3);
+}
+
+.order-summary {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.delivery-info {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+.delivery-date {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.delivery-date i {
+    color: #ff4b6e;
+    margin-right: 8px;
+}
+
+.delivery-type {
+    color: #666;
+    font-size: 0.9rem;
+    margin-left: 24px;
+}
+</style>
+
+<script>
+// Add this at the beginning of your script section
+window.addEventListener('scroll', function() {
+    const scrollPosition = window.scrollY;
+    const blurValue = Math.min(scrollPosition / 30, 10); // Max blur of 10px
+    document.querySelector('.blur-overlay').style.backdropFilter = `blur(${blurValue}px)`;
+});
+
+function changeImage(src) {
+    const mainImage = document.getElementById('mainImage');
+    mainImage.style.opacity = '0';
+    setTimeout(() => {
+        mainImage.src = src;
+        mainImage.style.opacity = '1';
+    }, 300);
+    
+    // Update active thumbnail
+    document.querySelectorAll('.thumbnail').forEach(thumb => {
+        thumb.classList.remove('active');
+        if(thumb.src === src) thumb.classList.add('active');
+    });
+}
+
+// Add this to your existing scripts
+document.addEventListener('DOMContentLoaded', function() {
+    const slider = document.querySelector('.slider-wrapper');
+    const slides = document.querySelectorAll('.slide');
+    let currentSlide = 0;
+    
+    function updateSlider() {
+        const slideWidth = slides[0].offsetWidth + 30;
+        const containerWidth = document.querySelector('.slider-container').offsetWidth;
+        const offset = (containerWidth - slideWidth) / 2;
+        slider.style.transform = `translateX(${offset - (currentSlide * slideWidth)}px)`;
+        
+        slides.forEach((slide, index) => {
+            slide.classList.toggle('active', index === currentSlide);
+        });
+    }
+    
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        updateSlider();
+    }
+    
+    // Auto advance every 3 seconds
+    setInterval(nextSlide, 3000);
+    
+    // Initial setup
+    updateSlider();
+    
+    // Update on resize
+    window.addEventListener('resize', updateSlider);
+});
+
+// Add this to your existing scripts
+document.addEventListener('DOMContentLoaded', function() {
+    const buyBtn = document.querySelector('.floating-buy-wrapper');
+    const productSection = document.querySelector('.product-preview');
+    
+    function checkScroll() {
+        if (!productSection) return;
+        
+        const rect = productSection.getBoundingClientRect();
+        const isVisible = rect.top <= window.innerHeight && rect.bottom >= 0;
+        
+        if (isVisible) {
+            buyBtn.classList.add('show');
+        } else {
+            buyBtn.classList.remove('show');
+        }
+    }
+
+    window.addEventListener('scroll', checkScroll);
+    checkScroll(); // Initial check
+});
+
+// Update the buy now button handler
+document.querySelector('.add-to-cart-btn').addEventListener('click', () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        showToast('Please login to continue', 'error');
+        setTimeout(() => {
+            window.location.href = '/login';
+        }, 2000);
+        return;
+    }
+    
+    // Store product image for checkout page
+    localStorage.setItem('productImage', document.getElementById('mainImage').src);
+    window.location.href = '/checkout';
+});
+
+function calculateDeliveryDate() {
+    const today = new Date();
+    const deliveryDate = new Date(today);
+    deliveryDate.setDate(today.getDate() + 2); // Add 2 days for delivery
+
+    const options = { 
+        weekday: 'long', 
+        month: 'short', 
+        day: 'numeric', 
+        year: 'numeric' 
+    };
+    
+    const formattedDate = deliveryDate.toLocaleDateString('en-US', options);
+    document.getElementById('deliveryDate').textContent = formattedDate;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    calculateDeliveryDate();
+    // ...existing DOMContentLoaded code...
+});
+</script>
+
+<!-- Add this right before the closing body tag -->
+<div class="floating-buy-wrapper">
+    <button onclick="scrollToBottom()" class="floating-buy-btn">
+        <i class="fas fa-shopping-bag"></i> Buy Now
+    </button>
+</div>
+
+<%- include('../partials/footer') %>
